@@ -53,31 +53,3 @@ pred_tree$final <- colnames(pred_test_df)[apply(pred_test_df,1,which.max)]
 mean(pred_tree$final==iris_test$Species) # Accuracy = 94.66%
 CrossTable(iris_test$Species,pred_tree$final)
 
-####### CART #############
-library(rpart)
-cars <- read.csv(file.choose())
-cor(cars)
-boxplot(cars)
-summary(cars)
-
-# Building a regression tree using rpart 
-# Simple model
-model_cart1 <- rpart(MPG~.,data=cars,method="anova")
-plot(model_cart1)
-text(model_cart1)
-summary(model_cart1)
-pred_mpg <- predict(model_cart1,cars)
-rmse_mpg <- sqrt(mean((pred_mpg-cars$MPG)^2))
-rmse_mpg
-
-Adjusted_RSqred <- function(pred, obs, formula = "corr", na.rm = FALSE) {
-  n <- sum(complete.cases(pred))
-  switch(formula,
-         corr = cor(obs, pred, use = ifelse(na.rm, "complete.obs", "everything"))^2,
-         traditional = 1 - (sum((obs-pred)^2, na.rm = na.rm)/((n-1)*var(obs, na.rm = na.rm))))
-}
-
-Adjusted_RSqred(pred_mpg,cars$MPG) # 0.8484
-
-plot(pred_mpg,cars$MPG)
-cor(pred_mpg,cars$MPG) # 0.92
